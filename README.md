@@ -12,9 +12,9 @@ How to use
 ----------
 
 First of all, include in your pages Mootools 1.2.5 or later and *CrossDomainFragment.js* source.
-You need these in the parent page and in the contained *<iframe>* page.
+You need these in the parent page and in the contained *&lt;iframe&gt;* page.
 
-In the parent page, define the *<iframe>* element:
+In the parent page, define the *&lt;iframe&gt;* element:
 
 	#HTML
 	
@@ -34,7 +34,7 @@ And instantiate the communication object:
 	// Then call send() method to send messages to the iframe window
 	comm.send('Hello iframe!');
 
-Also the page contained in the *<iframe>* has to instantiate **its own communication object**.
+Also the page contained in the *&lt;iframe&gt;* has to instantiate **its own communication object**.
 You can see that *recipient* option is not specified here, because it's *window.parent* by default.
 
 	#JS
@@ -63,7 +63,7 @@ Docs
 
 **Options:**
 
-- **recipient**: An *<iframe>* element or a *window* object (default *window.parent*).
+- **recipient**: An *&lt;iframe&gt;* element or a *window* object (default *window.parent*).
 - **pollingInterval**: Defines the interval in milleseconds between each hash fragment check (default: *250*). It has to be shorter than the minimum expected inteval between two incoming messages.
 
 **Events:**
