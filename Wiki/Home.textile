@@ -1,0 +1,8 @@
+*CrossDomainFragment* is a Mootools class that provides cross-domain communication between an @<iframe>@ element and its parent window using the fragment id technique as same-origin-policy workaround.
+Go to "*MooTools Forge plugin page*":http://mootools.net/forge/p/crossdomainfragment.
+
+!http://www.ibm.com/developerworks/web/library/wa-crossdomaincomm/fragment.gif!
+
+* "*Demo*":http://www.lorenzostanco.com/lab/demos/CrossDomainFragment/Demo.html
+* *[[HowTo]]*
+* *[[Docs]]*
