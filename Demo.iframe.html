@@ -1,0 +1,71 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>CrossDomainFragment demo page</title>
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+	<script type="text/javascript" src="Source/CrossDomainFragment.js"></script>
+	
+	<script type="text/javascript">
+		
+		window.addEvent('domready', function() {
+			
+			// Create the fragment communication object
+			var comm = new CrossDomainFragment({
+				
+				// No "recipient" option this time, default is window.parent.
+				
+				// Write received messages.
+				onReceive: function(message) {
+					$('inbox').set('text', message).getParent().highlight();
+					try { console.log("Iframe received: ", message); } catch (x) { } // Debug if console is available
+				}
+				
+			});
+			
+			// Send simple string message
+			$('send_button').addEvent('click', function() {
+				comm.send($('message').get('value'));
+			});
+			
+			// Send object message
+			$('send_object_button').addEvent('click', function() {
+				comm.send({
+					message: $('message').get('value'),
+					date: new Date()
+				});
+			});
+			
+			// Highlight at startup
+			$('inbox').getParent().highlight();
+			
+		});
+		
+	</script>
+	
+	<link href="Demo.css" rel="stylesheet" type="text/css"/>
+	
+</head>
+<body style="background-color: #EEEEEE;">
+
+	<p style="background-color: #EEEEEE;">
+		<b>I'm the iframe on a different domain.</b>
+		I received: <span id="inbox">nothing yet</span>
+	</p>
+
+	<p>
+		Test area:
+		<input type="text" id="message" value="Dolor sit amet">
+		<input type="button" id="send_button" value="Send">
+		<input type="button" id="send_object_button" value="Send object">
+	</p>
+	
+	<p>
+		<!-- Useless space, just to show that this is an <iframe>! :) -->
+		<br> <br> <br>
+	</p>
+	
+</body>
+</html>

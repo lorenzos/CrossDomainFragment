@@ -1,0 +1,119 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>CrossDomainFragment demo page</title>
+	
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+	<script type="text/javascript" src="Source/CrossDomainFragment.js"></script>
+	
+	<script type="text/javascript">
+		
+		window.addEvent('domready', function() {
+			
+			// Create the fragment communication object
+			var comm = new CrossDomainFragment({
+				
+				// Our "recipient" is the iframe element
+				recipient: $('iframe_element'),
+				
+				// Write received messages.
+				onReceive: function(message) {
+					$('inbox').set('text', message).getParent().highlight();
+					try { console.log("Iframe received: ", message); } catch (x) { } // Debug if console is available
+				}
+				
+			});
+			
+			// Send simple string message
+			$('send_button').addEvent('click', function() {
+				comm.send($('message').get('value'));
+			});
+			
+			// Send object message
+			$('send_object_button').addEvent('click', function() {
+				comm.send({
+					message: $('message').get('value'),
+					date: new Date()
+				});
+			});
+			
+			// Highlight at startup
+			$('inbox').getParent().highlight();
+			
+		});
+		
+	</script>
+	
+	<link href="Demo.css" rel="stylesheet" type="text/css"/>
+	
+</head>
+<body>
+
+	<h1>CrossDomainFragment demo page</h1>
+	
+	<p>
+		A Mootools class that provides <b>cross-domain communication</b>
+		between an <i>&lt;iframe&gt;</i> element and its parent windows using the 
+		fragment id technique as <abbr title="Same origin policy">SOP</abbr> workaround.<br>
+		Download and HowTo on <a href="http://mootools.net/forge/p/crossdomainfragment">Mootools Forge</a>, sources and issues on 
+		<a href="https://github.com/lorenzos/CrossDomainFragment">GitHub</a>, full documentation 
+		<a href="https://github.com/lorenzos/CrossDomainFragment/wiki/Docs">here</a>.
+	</p>
+	
+	<h2>Demo:</h2>
+	
+	<p>
+		<b>I'm the parent.</b> 
+		I received: <span id="inbox">nothing yet</span>
+	</p>
+
+	<p>
+		Test area:
+		<input type="text" id="message" value="Lorem ipsum">
+		<input type="button" id="send_button" value="Send">
+		<input type="button" id="send_object_button" value="Send object">
+	</p>
+	
+	<p>
+		<iframe src="Demo.iframe.html" id="iframe_element" width="600" height="100"></iframe>
+	</p>
+	
+	<h2>Quick guide:</h2>
+	
+	<p>
+		The communication object is instantiated on the parent window this way:
+	</p>
+	
+	<pre class="javascript">var comm = new CrossDomainFragment({
+	recipient: $('iframe_element'),
+	onReceive: function(message) {
+		$('inbox').set('text', message);
+	}
+});</pre>
+	<pre class="javascript">$('send_button').addEvent('click', function() {
+	comm.send($('message').get('value'));
+});</pre>
+	<pre class="html">&lt;iframe src=&quot;http://www.example.com/iframe.html&quot; id=&quot;iframe_element&quot;&lt;/iframe&gt;</pre>
+	
+	<p>
+		Also the page contained in the <code>&lt;iframe&gt;</code> (which is in a different domain) has to instantiate its own communication object.<br>
+		You can see that <code>recipient</code> option is not specified here, because it's <code>window.parent</code> by default.
+	</p>
+	
+	<pre class="javascript">var comm = new CrossDomainFragment({
+	onReceive: function(message) {
+		$('inbox').set('text', message);
+	}
+});</pre>
+
+	<h2>Credits:</h2>
+	
+	<p>
+		Thanks to Wang Jiaye and Hu Changchun (IBM) for their excellent work about the 
+		<a href="http://www.ibm.com/developerworks/web/library/wa-crossdomaincomm/#N100FB">fragment id solution</a>.
+	</p>
+	
+</body>
+</html>

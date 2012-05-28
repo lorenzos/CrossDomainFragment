@@ -1,0 +1,9 @@
+name: CrossDomainFragment
+author: lorenzo.stanco
+category: Utilities
+tags: [crossdomain, communication, iframe]
+demo: http://www.lorenzostanco.com/lab/demos/CrossDomainFragment/Demo.html
+docs: http://wiki.github.com/lorenzos/CrossDomainFragment/docs
+current: 0.1
+sources:
+  - "Source/CrossDomainFragment.js"
