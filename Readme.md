@@ -5,7 +5,7 @@ A Mootools class that provides cross-domain communication
 between an *<iframe>* element and its parent window using the
 fragment id technique as same-origin-policy workaround.
 
-![Screenshot](http://www.ibm.com/developerworks/web/library/wa-crossdomaincomm/fragment.gif)
+![Screenshot](https://github.com/lorenzos/CrossDomainFragment/raw/master/Graphics/logo.png)
 
 
 How to use
