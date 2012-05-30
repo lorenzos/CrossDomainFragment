@@ -25,19 +25,18 @@ var CrossDomainFragment = new Class({
 	Implements: [Options, Events],
 	
 	options: {
-		recipient: window.parent, // Can be an <iframe> element
+		recipient: null, // Can be an <iframe> element, if null window.parent will be used
 		pollingInterval: 250 // Hash string checks frequency
 	},
 	
 	initialize: function(options) {
 		
 		this.setOptions(options);
+		if (this.options.recipient == null) this.options.recipient = window.parent;
 		this.lastMessageStringReceived = '';
 		
 		// Get origin URL
-		this.origin = (this.options.recipient.location) ? this.options.recipient.location.href : this.options.recipient.src;
-		var hasHash = this.origin.indexOf('#');
-		if (hasHash > 0) this.origin = this.origin.substr(0, hasHash);
+		this.getOrigin();
 		
 		// Start polling
 		this.start();
@@ -56,7 +55,13 @@ var CrossDomainFragment = new Class({
 	},
 	
 	send: function(message) {
-	
+		
+		// Wait for origin...
+		if (!this.origin) {
+			this.send.bind(this, message).delay(this.options.pollingInterval * 2);
+			return this;
+		}
+		
 		// Encode message and generate URL
 		var encodedMessage = encodeURIComponent(JSON.encode(this.packMessage(message)));
 		var encodedMessageUrl = this.origin + "#" + encodedMessage;
@@ -74,6 +79,26 @@ var CrossDomainFragment = new Class({
 		
 	},
 	
+	getOrigin: function() {
+		
+		// If recipient is an iframe, I can get origin now
+		if (this.options.recipient != window.parent) {
+			this.setOrigin(this.options.recipient.src);
+			
+			// Send origin-initialization message to the iframe
+			var encodedMessage = encodeURIComponent(JSON.encode({ origin: window.location.href }));
+			this.options.recipient.src = this.origin + "#" + encodedMessage;
+			
+		}
+		
+	},
+	
+	setOrigin: function(origin) {
+		var hasHash = origin.indexOf('#');
+		if (hasHash > 0) this.origin = origin.substr(0, hasHash); // Remove #hash part
+		else this.origin = origin;
+	},
+	
 	poll: function() {
 		
 		// Get hash string
@@ -82,8 +107,18 @@ var CrossDomainFragment = new Class({
 		// If hash string is "new"
 		if (messageString != this.lastMessageStringReceived) {
 			this.lastMessageStringReceived = messageString; // Store last hash string
-			var message = this.unpackMessage(JSON.decode(messageString)); // Unpack
-			this.fireEvent('receive', message);
+			
+			// It's an origin-initilization message?
+			var decodedMessage = JSON.decode(messageString);
+			if (decodedMessage.origin) {
+				this.setOrigin(decodedMessage.origin);
+				
+			// Normal message
+			} else {
+				var message = this.unpackMessage(decodedMessage); // Unpack
+				this.fireEvent('receive', message);
+			}
+			
 		}
 		
 		return this;
