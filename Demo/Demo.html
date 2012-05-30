@@ -21,7 +21,7 @@
 				// Write received messages.
 				onReceive: function(message) {
 					$('inbox').set('text', message).getParent().highlight();
-					try { console.log("Iframe received: ", message); } catch (x) { } // Debug if console is available
+					try { console.log("Parent received: ", message); } catch (x) { } // Debug if console is available
 				}
 				
 			});
